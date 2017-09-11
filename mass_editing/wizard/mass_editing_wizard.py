@@ -51,26 +51,19 @@ class MassEditingWizard(models.TransientModel):
                                       ('remove_m2m', 'Remove'),
                                       ('add', 'Add')]
                     }
-                    xml_group = etree.SubElement(xml_group, 'group', {
-                        'colspan': '6',
-                        'col': '6',
-                    })
-                    etree.SubElement(xml_group, 'separator', {
-                        'string': field_info[field.name]['string'],
-                        'colspan': '6',
-                    })
                     etree.SubElement(xml_group, 'field', {
                         'name': "selection__" + field.name,
-                        'colspan': '6',
-                        'nolabel': '1'
+                        'colspan': '2',
                     })
-                    etree.SubElement(xml_group, 'field', {
+                    m2m_field = etree.SubElement(xml_group, 'field', {
                         'name': field.name,
-                        'colspan': '6',
+                        'colspan': '4',
                         'nolabel': '1',
                         'attrs': ("{'invisible': [('selection__" +
                                   field.name + "', '=', 'remove_m2m')]}"),
                     })
+                    m2m_field.set("widget", "many2many_tags")
+
                 elif field.ttype == "one2many":
                     all_fields["selection__" + field.name] = {
                         'type': 'selection',
@@ -84,15 +77,16 @@ class MassEditingWizard(models.TransientModel):
                     }
                     etree.SubElement(xml_group, 'field', {
                         'name': "selection__" + field.name,
-                        'colspan': '4',
+                        'colspan': '2',
                     })
-                    etree.SubElement(xml_group, 'field', {
+                    o2m_field = etree.SubElement(xml_group, 'field', {
                         'name': field.name,
-                        'colspan': '6',
+                        'colspan': '4',
                         'nolabel': '1',
                         'attrs': ("{'invisible':[('selection__" +
                                   field.name + "', '=', 'remove_o2m')]}"),
                     })
+                    o2m_field.set("widget", "many2many_tags")
                 elif field.ttype == "many2one":
                     all_fields["selection__" + field.name] = {
                         'type': 'selection',
